@@ -203,14 +203,30 @@ export async function agentLoop(goal, maxSteps = config.llm.maxSteps, sessionHis
 
       for (let attempt = 0; attempt < 3; attempt++) {
         try {
-          response = await client.chat.completions.create({
+          const requestBody = {
             model: usedModel,
             messages,
             tools: getToolsForRole(agentType, goal),
             tool_choice: toolChoice,
             temperature: config.llm.temperature,
             max_tokens: maxOutputTokens ?? config.llm.maxTokens,
-          });
+          };
+
+          // MiMo thinking mode: only for xiaomi/mimo* models
+          const isMimo = /mimo/i.test(usedModel);
+          if (isMimo) {
+            const thinkingKey = agentType === "SCREENER" ? "screeningThinkingEnabled"
+              : agentType === "MANAGER" ? "managementThinkingEnabled"
+              : "generalThinkingEnabled";
+            const enableThinking = config.llm[thinkingKey] ?? true;
+            requestBody.chat_template_kwargs = { enable_thinking: enableThinking };
+            if (!enableThinking) {
+              requestBody.temperature = 0.3;
+              log("agent", `MiMo thinking OFF for ${agentType} role`);
+            }
+          }
+
+          response = await client.chat.completions.create(requestBody);
         } catch (error) {
           if (providerMode === "system" && isSystemRoleError(error)) {
             providerMode = "user_embedded";

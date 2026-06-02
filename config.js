@@ -231,6 +231,10 @@ export const config = {
     managementModel: u.managementModel ?? process.env.LLM_MODEL ?? "openrouter/healer-alpha",
     screeningModel:  u.screeningModel  ?? process.env.LLM_MODEL ?? "openrouter/hunter-alpha",
     generalModel:    u.generalModel    ?? process.env.LLM_MODEL ?? "openrouter/healer-alpha",
+    // MiMo thinking mode per role (only applies to xiaomi/mimo* models)
+    screeningThinkingEnabled:  u.screeningThinkingEnabled  ?? false,
+    managementThinkingEnabled: u.managementThinkingEnabled ?? true,
+    generalThinkingEnabled:    u.generalThinkingEnabled    ?? true,
   },
 
   // ─── Darwinian Signal Weighting ───────

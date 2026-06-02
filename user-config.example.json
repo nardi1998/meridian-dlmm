@@ -90,6 +90,9 @@
   "managementModel": "mimo-v2.5",
   "screeningModel": "mimo-v2.5",
   "generalModel": "mimo-v2.5",
+  "screeningThinkingEnabled": false,
+  "managementThinkingEnabled": true,
+  "generalThinkingEnabled": true,
 
   "darwinEnabled": true,
   "darwinWindowDays": 60,
