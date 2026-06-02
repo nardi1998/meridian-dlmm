@@ -93,6 +93,12 @@ import { getDecisionSummary } from "./decision-log.js";
 
 // Supports OpenRouter (default) or any OpenAI-compatible local server (e.g. LM Studio)
 // To use LM Studio: set LLM_BASE_URL=http://localhost:1234/v1 and LLM_API_KEY=lm-studio in .env
+
+// OpenAI SDK requires OPENAI_API_KEY env var — bridge from LLM_API_KEY if not set
+if (!process.env.OPENAI_API_KEY && (process.env.LLM_API_KEY || process.env.OPENROUTER_API_KEY)) {
+  process.env.OPENAI_API_KEY = process.env.LLM_API_KEY || process.env.OPENROUTER_API_KEY;
+}
+
 const client = new OpenAI({
   baseURL: process.env.LLM_BASE_URL || "https://openrouter.ai/api/v1",
   apiKey: process.env.LLM_API_KEY || process.env.OPENROUTER_API_KEY,
@@ -265,6 +271,10 @@ export async function agentLoop(goal, maxSteps = config.llm.maxSteps, sessionHis
 
       // If the model didn't call any tools, it's done
       if (!msg.tool_calls || msg.tool_calls.length === 0) {
+        // Some models (e.g. MiMo) return content in reasoning_content during thinking mode
+        if (!msg.content && msg.reasoning_content) {
+          msg.content = msg.reasoning_content;
+        }
         // Hermes sometimes returns null content — pop the empty message and retry once
         if (!msg.content) {
           messages.pop(); // remove the empty assistant message
