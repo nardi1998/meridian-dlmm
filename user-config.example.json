@@ -1,9 +1,9 @@
 {
   "preset": "custom",
   "rpcUrl": "https://pump.helius-rpc.com",
-  "llmBaseUrl": "https://api.openai.com/v1",
+  "llmBaseUrl": "https://token-plan-sgp.xiaomimimo.com/v1",
   "llmApiKey": "",
-  "llmModel": "gpt-4o-mini",
+  "llmModel": "mimo-v2.5",
   "dryRun": true,
 
   "deployAmountSol": 0.1,
@@ -87,9 +87,9 @@
   "temperature": 0.373,
   "maxTokens": 4096,
   "maxSteps": 20,
-  "managementModel": "gpt-4o-mini",
-  "screeningModel": "gpt-4o-mini",
-  "generalModel": "gpt-4o-mini",
+  "managementModel": "mimo-v2.5",
+  "screeningModel": "mimo-v2.5",
+  "generalModel": "mimo-v2.5",
 
   "darwinEnabled": true,
   "darwinWindowDays": 60,

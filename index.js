@@ -922,6 +922,14 @@ function stopCronJobs() {
   _cronTasks = [];
 }
 
+function shutdown(reason) {
+  log("shutdown", `Shutting down: ${reason}`);
+  stopCronJobs();
+  stopPolling();
+  try { rl?.close?.(); } catch {}
+  setTimeout(() => process.exit(0), 500);
+}
+
 function startCronJobs() {
   stopCronJobs();
   const screeningTask = cron.schedule(`*/${Math.max(1, config.schedule.screeningIntervalMin)} * * * *`, async () => {
