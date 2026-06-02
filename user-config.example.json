@@ -17,6 +17,8 @@
   "minBinsBelow": 35,
   "maxBinsBelow": 69,
   "defaultBinsBelow": 69,
+  "fixedBinsBelowEnabled": true,
+  "fixedBinsBelow": 69,
 
   "timeframe": "30m",
   "category": "trending",
