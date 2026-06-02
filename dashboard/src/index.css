@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --surface: 248 250 252;
+    --surface-raised: 255 255 255;
+    --surface-card: 255 255 255;
+    --surface-border: 226 232 240;
+    --foreground: 15 23 42;
+    --muted: 100 116 139;
+    --subtle: 148 163 184;
+    --chart-grid: 226 232 240;
+    --chart-tick: 148 163 184;
+  }
+
+  .dark {
+    --surface: 12 14 18;
+    --surface-raised: 18 21 28;
+    --surface-card: 22 26 34;
+    --surface-border: 37 42 53;
+    --foreground: 244 244 245;
+    --muted: 161 161 170;
+    --subtle: 113 113 122;
+    --chart-grid: 37 42 53;
+    --chart-tick: 113 113 122;
+  }
+
+  body {
+    @apply bg-surface text-foreground antialiased transition-colors duration-200;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-surface-border;
+  }
+
+  .row-hover {
+    @apply hover:bg-foreground/[0.04];
+  }
+}
