@@ -319,6 +319,34 @@ function describeLatestCandidates(limit = 5) {
   return `Latest candidates (${_latestCandidates.length}) — updated ${age}\n\n${lines.join("\n")}`;
 }
 
+function formatCandidates(candidates) {
+  if (!Array.isArray(candidates) || !candidates.length) return "  (none)";
+  return candidates.map((pool, i) => {
+    const feeTvl = pool.fee_active_tvl_ratio ?? pool.fee_tvl_ratio ?? "?";
+    const vol = pool.volume_window ?? pool.volume_24h ?? "?";
+    const tvl = pool.tvl ?? pool.active_tvl ?? "?";
+    const organic = pool.organic_score ?? "?";
+    const holders = pool.holders ?? "?";
+    return `  ${i + 1}. ${pool.name} | fee/aTVL ${feeTvl}% | vol $${vol} | TVL $${tvl} | holders ${holders} | organic ${organic}`;
+  }).join("\n");
+}
+
+async function maybeRunMissedBriefing() {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const lastBriefing = getLastBriefingDate();
+    if (lastBriefing === today) return;
+    if (!telegramEnabled()) return;
+    const briefing = await generateBriefing();
+    const text = briefing.replace(/<[^>]*>/g, "");
+    await sendMessage(`Morning briefing (auto):\n\n${text}`).catch(() => {});
+    setLastBriefingDate();
+    log("briefing", "Sent missed briefing for " + today);
+  } catch (error) {
+    log("briefing_warn", "maybeRunMissedBriefing failed: " + error.message);
+  }
+}
+
 function formatWalletStatus(wallet, positions) {
   const deployAmount = computeDeployAmount(wallet.sol);
   const hive = isHiveMindEnabled() ? "on" : "off";
