@@ -344,6 +344,8 @@ const FIELD_SECTIONS = [
       { key: "takeProfitPct", label: "Take profit %", type: "number", min: 0 },
       { key: "minFeePerTvl24h", label: "Min fee per TVL 24h", type: "number", min: 0 },
       { key: "minAgeBeforeYieldCheck", label: "Min age before yield check (minutes)", type: "number", min: 0 },
+      { key: "fixedBinsBelowEnabled", label: "Use fixed bins below? (true/false)", type: "boolean" },
+      { key: "fixedBinsBelow", label: "Fixed bins below value", type: "number", min: 35 },
       { key: "whaleEscapeEnabled", label: "Detect whale escape? (true/false)", type: "boolean" },
       { key: "whaleEscapeApi", label: "Whale escape data source (datapi/meteora)", type: "string" },
       { key: "whaleEscapeWarnTvlPct", label: "Whale escape warn TVL % threshold", type: "number", min: 0 },

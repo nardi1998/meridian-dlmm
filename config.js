@@ -211,6 +211,8 @@ export const config = {
     minBinsBelow: strategyMinBinsBelow,
     maxBinsBelow: strategyMaxBinsBelow,
     defaultBinsBelow: strategyDefaultBinsBelow,
+    fixedBinsBelowEnabled: u.fixedBinsBelowEnabled ?? false,
+    fixedBinsBelow: u.fixedBinsBelow ?? 69,
   },
 
   // ─── Scheduling ─────────────────────────
@@ -358,6 +360,8 @@ export function reloadScreeningThresholds() {
       config.strategy.minBinsBelow,
       Math.min(config.strategy.maxBinsBelow, Math.round(defaultBinsBelow)),
     );
+    if (fresh.fixedBinsBelowEnabled !== undefined) config.strategy.fixedBinsBelowEnabled = fresh.fixedBinsBelowEnabled;
+    if (numericConfig(fresh.fixedBinsBelow) != null) config.strategy.fixedBinsBelow = Math.max(MIN_SAFE_BINS_BELOW, Math.round(fresh.fixedBinsBelow));
   } catch { /* ignore */ }
   try {
     const freshGmgn = readJsonIfExists(GMGN_CONFIG_PATH);

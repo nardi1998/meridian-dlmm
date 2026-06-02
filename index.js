@@ -238,6 +238,9 @@ function getLoneCandidateSkipReason({ pool, sw, n, ti } = {}) {
 }
 
 function computeBinsBelow(volatility) {
+  if (config.strategy.fixedBinsBelowEnabled) {
+    return config.strategy.fixedBinsBelow;
+  }
   const parsedVolatility = Number(volatility);
   if (!Number.isFinite(parsedVolatility) || parsedVolatility <= 0) {
     throw new Error(`Invalid volatility ${volatility ?? "unknown"} — refusing volatility-scaled deploy.`);
