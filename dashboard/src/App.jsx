@@ -11,7 +11,7 @@ import { useDashboard } from "./hooks/useDashboard";
 
 export default function App() {
   const [paused, setPaused] = useState(false);
-  const { data, loading, error, refresh } = useDashboard();
+  const { data, loading, error, connected, refresh } = useDashboard();
 
   return (
     <div className="min-h-screen bg-surface">
@@ -23,6 +23,7 @@ export default function App() {
         onRefresh={refresh}
         loading={loading}
         lastCycle={data.agentStatus?.lastCycle}
+        connected={connected}
       />
 
       {error && (

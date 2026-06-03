@@ -8,6 +8,7 @@ export default function Header({
   onRefresh,
   loading,
   lastCycle,
+  connected,
 }) {
   const running = !paused;
 
@@ -23,6 +24,11 @@ export default function Header({
             Autonomous DLMM LP Agent
             {source === "live" && (
               <span className="ml-2 text-emerald-500/80">· live</span>
+            )}
+            {connected !== undefined && (
+              <span className={`ml-2 ${connected ? "text-emerald-500/80" : "text-red-500/80"}`}>
+                · {connected ? "WS connected" : "WS offline"}
+              </span>
             )}
             {dryRun && <span className="ml-2 text-amber-500/80">· DRY RUN</span>}
           </p>

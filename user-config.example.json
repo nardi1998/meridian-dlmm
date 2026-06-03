@@ -1,9 +1,8 @@
 {
   "preset": "custom",
   "rpcUrl": "https://pump.helius-rpc.com",
-  "llmBaseUrl": "https://token-plan-sgp.xiaomimimo.com/v1",
+  "llmBaseUrl": "https://openrouter.ai/api/v1",
   "llmApiKey": "",
-  "llmModel": "mimo-v2.5",
   "dryRun": true,
 
   "deployAmountSol": 0.1,
@@ -87,12 +86,12 @@
   "temperature": 0.373,
   "maxTokens": 4096,
   "maxSteps": 20,
-  "managementModel": "mimo-v2.5",
-  "screeningModel": "mimo-v2.5",
-  "generalModel": "mimo-v2.5",
+  "managementModel": "minimax/minimax-m2.5",
+  "screeningModel": "deepseek/deepseek-v4-flash",
+  "generalModel": "deepseek/deepseek-v4-flash",
   "screeningThinkingEnabled": false,
-  "managementThinkingEnabled": true,
-  "generalThinkingEnabled": true,
+  "managementThinkingEnabled": false,
+  "generalThinkingEnabled": false,
 
   "darwinEnabled": true,
   "darwinWindowDays": 60,
