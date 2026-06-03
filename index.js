@@ -845,6 +845,30 @@ async function runScreeningCycle({ silent = false } = {}) {
   try {
     const report = await runDeterministicScreen(5);
     if (!silent && telegramEnabled()) await sendMessage(report).catch(() => {});
+
+    // Auto-deploy: use LLM to pick and deploy if enabled
+    if (config.risk.autoDeploy) {
+      const positions = await getMyPositions({ force: true, silent: true }).catch(() => null);
+      const openCount = positions?.total_positions ?? 0;
+      if (openCount < config.risk.maxPositions) {
+        log("screening", "Auto-deploy enabled — running agent to pick best candidate...");
+        try {
+          const { content: reply } = await agentLoop(
+            `get_top_candidates, decide whether any candidate is worth deploying, and only call deploy_position with ${computeDeployAmount((await getWalletBalances()).sol)} SOL if conviction is strong. If only one candidate is returned and it lacks narrative or smart-wallet confirmation, skip and report NO DEPLOY. Execute now, don't ask.`,
+            config.llm.maxSteps,
+            [],
+            "SCREENER"
+          );
+          log("screening", "Auto-deploy result: " + reply?.slice(0, 200));
+          if (!silent && telegramEnabled() && reply) await sendMessage(`Auto-deploy: ${reply}`).catch(() => {});
+        } catch (deployError) {
+          log("screening", "Auto-deploy failed: " + deployError.message);
+        }
+      } else {
+        log("screening", `Auto-deploy skipped: ${openCount}/${config.risk.maxPositions} positions open`);
+      }
+    }
+
     return report;
   } catch (error) {
     log("screening", `Screening cycle failed: ${error.message}`);

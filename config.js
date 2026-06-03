@@ -76,6 +76,7 @@ export const config = {
   risk: {
     maxPositions:    u.maxPositions    ?? 3,
     maxDeployAmount: u.maxDeployAmount ?? 50,
+    autoDeploy:      u.autoDeploy      ?? false,
   },
 
   // ─── Pool Screening Thresholds ───────────

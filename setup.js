@@ -239,6 +239,7 @@ const FIELD_SECTIONS = [
       { key: "maxPositions", label: "Max concurrent positions", type: "number", min: 1 },
       { key: "minSolToOpen", label: "Min SOL balance to open", type: "number", min: 0.01 },
       { key: "maxDeployAmount", label: "Max SOL per position", type: "number", min: 0.01 },
+      { key: "autoDeploy", label: "Auto-deploy on screening cycle? (true/false)", type: "boolean" },
       { key: "gasReserve", label: "Gas reserve (SOL)", type: "number", min: 0 },
       { key: "positionSizePct", label: "Dynamic position size % of deployable balance", type: "number", min: 0, max: 1 },
     ],

@@ -9,6 +9,7 @@
   "maxPositions": 3,
   "minSolToOpen": 0.1,
   "maxDeployAmount": 0.1,
+  "autoDeploy": true,
   "gasReserve": 0.2,
   "positionSizePct": 0.35,
 
