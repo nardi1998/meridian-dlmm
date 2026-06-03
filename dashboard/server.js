@@ -6,6 +6,7 @@ import http from "http";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import dotenv from "dotenv";
+import { WebSocketServer } from "ws";
 import { getMockDashboard } from "./src/data/mockData.js";
 import { perfFeesSol, perfPnlSol } from "../pnl-units.js";
 
@@ -321,7 +322,57 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+// ─── WebSocket: broadcast live data on change ──────────────────────────────
+const wss = new WebSocketServer({ server });
+let lastHash = null;
+const WS_POLL_INTERVAL = 5000;
+
+function hashDashboard(data) {
+  try {
+    const key = JSON.stringify({
+      sol: data.overview?.walletSol,
+      pnl: data.overview?.pnlSol,
+      positions: data.positions?.length,
+      fees: data.overview?.feesEarnedSol,
+      closed: data.closedPositions?.length,
+      lastCycle: data.agentStatus?.lastCycle,
+    });
+    let h = 0;
+    for (let i = 0; i < key.length; i++) {
+      h = ((h << 5) - h + key.charCodeAt(i)) | 0;
+    }
+    return h;
+  } catch { return 0; }
+}
+
+async function pollAndBroadcast() {
+  try {
+    const data = await buildLiveDashboard();
+    const h = hashDashboard(data);
+    if (h !== lastHash) {
+      lastHash = h;
+      const payload = JSON.stringify({ type: "update", data });
+      for (const client of wss.clients) {
+        if (client.readyState === 1) client.send(payload);
+      }
+    }
+  } catch { /* ignore poll errors */ }
+}
+
+wss.on("connection", async (ws) => {
+  console.log(`[WS] client connected (total: ${wss.clients.size})`);
+  // Send initial snapshot immediately
+  try {
+    const data = await buildLiveDashboard();
+    ws.send(JSON.stringify({ type: "update", data }));
+  } catch { /* ignore */ }
+  ws.on("close", () => console.log(`[WS] client disconnected (total: ${wss.clients.size})`));
+});
+
+setInterval(pollAndBroadcast, WS_POLL_INTERVAL);
+
 server.listen(PORT, () => {
   console.log(`Meridian dashboard API http://localhost:${PORT}`);
   console.log(`  GET /api/dashboard`);
+  console.log(`  WS  ws://localhost:${PORT} (poll every ${WS_POLL_INTERVAL / 1000}s)`);
 });
